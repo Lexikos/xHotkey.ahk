@@ -12,7 +12,7 @@ Copy the contents of the `Lib` folder into a [function library](http://ahkscript
 
 Creates, modifies, enables, or disables a hotkey.
 
-*KeyName:* The hotkey, such as `#c` for Win+C.
+*KeyName:* The hotkey, such as `"#c"` for Win+C.
 
 *Callback:* A function to call when the hotkey fires.  This can be a function name or reference, or an object. The sample script *xHotkey_test.ahk* shows how to use an object to bind parameters to a function.
 
@@ -21,7 +21,7 @@ Creates, modifies, enables, or disables a hotkey.
 
     xHotkey(IfWin [, WinTitle, WinText])
 
-*IfWin* can be any of the IfWin commands supported by the Hotkey command, but cannot be `If, Expression`. 
+*IfWin* can be the name of any of the IfWin commands supported by the Hotkey command, but cannot be `"If"`. 
 
     xHotkey.IfWinActive(WinTitle, WinText)
     xHotkey.IfWinExist(WinTitle, WinText)
@@ -54,6 +54,8 @@ Modifiers are sorted into the following order:
 
     * <^ <! <+ <# >^ >! >+ ># ^ ! + #
 
+Because the use-hook `$` and pass-through `~` modifiers do not form part of the identity of the hotkey, they are not included in the return value. Instead, the *UseHook* and *HasTilde* parameters are set according to whether those modifiers are present.
+
 Key names are converted to their long form and proper casing, so for instance, `bs` becomes `Backspace` and `return` becomes `Enter`. Consequently, while using inconsistent names causes problems with normal hotkeys, it does not bother xHotkey at all.
 
 `vkNN` and `scNNN` codes are converted to lower-case. AutoHotkey is designed to treat these as distinct from their corresponding key names, so they are not converted to names.
@@ -81,7 +83,7 @@ Defining a hotkey outside of xHotkey with the wrong symbol order can prevent tha
 
 Each hotkey can only run one thread at a time. Normally, while a hotkey subroutine is running, other variants of the same hotkey can still run. This isn't the case with xHotkey since all variants of a hotkey are actually seen as one variant by AutoHotkey. 
 
-Hotkey options such as `B` (thread buffering) `Pn` (thread priority) and `Tn` (max threads) are not supported. This is mainly for simplicity, but also because the options would apply to all variants of the hotkey due to the way xHotkey dispatches hotkey events.  For example:
+Hotkey options such as `B` (thread buffering), `Pn` (thread priority) and `Tn` (max threads) are not supported. This is mainly for simplicity, but also because the options would apply to all variants of the hotkey due to the way xHotkey dispatches hotkey events.  For example:
 
 ```AutoHotkey
 xHotkey("^1", "AAA", "T5")
@@ -90,3 +92,5 @@ xHotkey("^1", "BBB", "T2")  ; This would apply to AAA as well.
 ```
 
 There is no equivalent of `Hotkey If, Expression`.
+
+Calling any of the `Hotkey If` sub-commands does not affect xHotkey. This is intentional. However, calling xHotkey does revert the Hotkey command to global context. This is unavoidable.

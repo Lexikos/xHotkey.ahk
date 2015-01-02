@@ -47,6 +47,7 @@ class xHotkey {
         
         if (hkNew || (wasActive != (hk.activeCount != 0))) {
             this._Hotkey(KeyName, hk.activeCount ? "On" : "Off")
+            hk.appliedTilde := false
             if hkNew
                 this.hk[KeyName] := hk
         }
